@@ -7,7 +7,7 @@
 
    Estructura de este archivo, de arriba a abajo:
      1. Rutas de imágenes/audio (antes venían embebidas en base64; ahora son
-        archivos sueltos en assets/img y assets/audio).
+        archivos sueltos, en la misma carpeta que index.html/styles.css/script.js).
      2. DATA — todos los arreglos con el contenido real del sitio (línea de
         tiempo, leyendas, épocas, cruzados, jugadas, quiz, fuentes).
      3. RENDER — funciones que toman esos arreglos y generan el HTML dentro
@@ -22,66 +22,66 @@
   "use strict";
 
   /* ---------------- Escudos y sonidos ---------------- */
-  var CREST_AME = "assets/img/crest_ame.png";
-  var CREST_CHI = "assets/img/crest_chi.png";
-  var SOUND_AME = "assets/audio/sound_ame.mp3";
-  var SOUND_CHI = "assets/audio/sound_chi.mp3";
-  var SOUND_STADIUM = "assets/audio/sound_stadium.mp3";
+  var CREST_AME = "crest_ame.png";
+  var CREST_CHI = "crest_chi.png";
+  var SOUND_AME = "sound_ame.mp3";
+  var SOUND_CHI = "sound_chi.mp3";
+  var SOUND_STADIUM = "sound_stadium.mp3";
 
   /* ---------------- Fotos de leyendas (Club América) ---------------- */
-  var PHOTO_BLANCO = "assets/img/photo_blanco.jpg";
-  var PHOTO_HENRYMARTIN = "assets/img/photo_henrymartin.jpg";
-  var PHOTO_SANTOS = "assets/img/photo_santos.jpg";
-  var PHOTO_BORJA = "assets/img/photo_borja.jpg";
-  var PHOTO_ZELADA = "assets/img/photo_zelada.jpg";
-  var PHOTO_ORTEGA = "assets/img/photo_ortega.jpg";
-  var PHOTO_ZAGUEPADRE = "assets/img/photo_zaguepadre.jpg";
-  var PHOTO_ZAGUEHIJO = "assets/img/photo_zaguehijo.jpg";
-  var PHOTO_REINOSO = "assets/img/photo_reinoso.jpg";
-  var PHOTO_RECORDGARZA = "assets/img/photo_recordgarza.jpg";
-  var PHOTO_JUANHERNANDEZ = "assets/img/photo_juanhernandez.jpg";
-  var PHOTO_TENA = "assets/img/photo_tena.jpg";
-  var PHOTO_PICHOJOS = "assets/img/photo_pichojos.jpg";
-  var PHOTO_FIDALGO = "assets/img/photo_fidalgo.jpg";
-  var PHOTO_LAYUN = "assets/img/photo_layun.jpg";
+  var PHOTO_BLANCO = "photo_blanco.jpg";
+  var PHOTO_HENRYMARTIN = "photo_henrymartin.jpg";
+  var PHOTO_SANTOS = "photo_santos.jpg";
+  var PHOTO_BORJA = "photo_borja.jpg";
+  var PHOTO_ZELADA = "photo_zelada.jpg";
+  var PHOTO_ORTEGA = "photo_ortega.jpg";
+  var PHOTO_ZAGUEPADRE = "photo_zaguepadre.jpg";
+  var PHOTO_ZAGUEHIJO = "photo_zaguehijo.jpg";
+  var PHOTO_REINOSO = "photo_reinoso.jpg";
+  var PHOTO_RECORDGARZA = "photo_recordgarza.jpg";
+  var PHOTO_JUANHERNANDEZ = "photo_juanhernandez.jpg";
+  var PHOTO_TENA = "photo_tena.jpg";
+  var PHOTO_PICHOJOS = "photo_pichojos.jpg";
+  var PHOTO_FIDALGO = "photo_fidalgo.jpg";
+  var PHOTO_LAYUN = "photo_layun.jpg";
 
   /* ---------------- Fotos de leyendas (Chivas Guadalajara) ---------------- */
-  var PHOTO_C_TUBO = "assets/img/photo_c_tubo.jpg";
-  var PHOTO_C_CALDERON = "assets/img/photo_c_calderon.jpg";
-  var PHOTO_C_SEPULVEDA = "assets/img/photo_c_sepulveda.jpg";
-  var PHOTO_C_QUIRARTE = "assets/img/photo_c_quirarte.jpg";
-  var PHOTO_C_SALCIDO = "assets/img/photo_c_salcido.jpg";
-  var PHOTO_C_VILLEGAS = "assets/img/photo_c_villegas.jpg";
-  var PHOTO_C_MORALES = "assets/img/photo_c_morales.jpg";
-  var PHOTO_C_GALINDO = "assets/img/photo_c_galindo.jpg";
-  var PHOTO_C_RAMONRAMIREZ = "assets/img/photo_c_ramonramirez.jpg";
-  var PHOTO_C_CHAVAREYES = "assets/img/photo_c_chavareyes.jpg";
-  var PHOTO_C_ELCHALE = "assets/img/photo_c_elchale.jpg";
-  var PHOTO_C_OMARBRAVO = "assets/img/photo_c_omarbravo.jpg";
-  var PHOTO_C_CHICHARITO = "assets/img/photo_c_chicharito.jpg";
-  var PHOTO_C_BOFOBAUTISTA = "assets/img/photo_c_bofobautista.jpg";
-  var PHOTO_C_HORMIGA = "assets/img/photo_c_hormiga.jpg";
-  var PHOTO_C_OSWALDOSANCHEZ = "assets/img/photo_c_oswaldosanchez.jpg";
-  var PHOTO_C_VENADOMEDINA = "assets/img/photo_c_venadomedina.jpg";
-  var PHOTO_MUNOZ = "assets/img/photo_munoz.jpg";
-  var PHOTO_OCHOA = "assets/img/photo_ochoa.jpg";
+  var PHOTO_C_TUBO = "photo_c_tubo.jpg";
+  var PHOTO_C_CALDERON = "photo_c_calderon.jpg";
+  var PHOTO_C_SEPULVEDA = "photo_c_sepulveda.jpg";
+  var PHOTO_C_QUIRARTE = "photo_c_quirarte.jpg";
+  var PHOTO_C_SALCIDO = "photo_c_salcido.jpg";
+  var PHOTO_C_VILLEGAS = "photo_c_villegas.jpg";
+  var PHOTO_C_MORALES = "photo_c_morales.jpg";
+  var PHOTO_C_GALINDO = "photo_c_galindo.jpg";
+  var PHOTO_C_RAMONRAMIREZ = "photo_c_ramonramirez.jpg";
+  var PHOTO_C_CHAVAREYES = "photo_c_chavareyes.jpg";
+  var PHOTO_C_ELCHALE = "photo_c_elchale.jpg";
+  var PHOTO_C_OMARBRAVO = "photo_c_omarbravo.jpg";
+  var PHOTO_C_CHICHARITO = "photo_c_chicharito.jpg";
+  var PHOTO_C_BOFOBAUTISTA = "photo_c_bofobautista.jpg";
+  var PHOTO_C_HORMIGA = "photo_c_hormiga.jpg";
+  var PHOTO_C_OSWALDOSANCHEZ = "photo_c_oswaldosanchez.jpg";
+  var PHOTO_C_VENADOMEDINA = "photo_c_venadomedina.jpg";
+  var PHOTO_MUNOZ = "photo_munoz.jpg";
+  var PHOTO_OCHOA = "photo_ochoa.jpg";
 
   /* ---------------- Fotos de plantel completo por época (sección "Épocas") ---------------- */
-  var ERA_E60 = "assets/img/era_e60.jpg";
-  var ERA_E74 = "assets/img/era_e74.jpg";
-  var ERA_E86 = "assets/img/era_e86.jpg";
-  var ERA_E94 = "assets/img/era_e94.jpg";
-  var ERA_E2003 = "assets/img/era_e2003.jpg";
-  var ERA_E2013 = "assets/img/era_e2013.jpg";
-  var ERA_ETRI = "assets/img/era_etri.jpg";
-  var ERA_C_1949 = "assets/img/era_c_1949.jpg";
-  var ERA_C_87 = "assets/img/era_c_87.jpg";
-  var ERA_C_97 = "assets/img/era_c_97.jpg";
-  var ERA_C_2004 = "assets/img/era_c_2004.jpg";
-  var ERA_C_2010 = "assets/img/era_c_2010.jpg";
-  var ERA_C_2017 = "assets/img/era_c_2017.jpg";
-  var ERA_C_2026 = "assets/img/era_c_2026.jpg";
-  var ERA_C_2006 = "assets/img/era_c_2006.jpg";
+  var ERA_E60 = "era_e60.jpg";
+  var ERA_E74 = "era_e74.jpg";
+  var ERA_E86 = "era_e86.jpg";
+  var ERA_E94 = "era_e94.jpg";
+  var ERA_E2003 = "era_e2003.jpg";
+  var ERA_E2013 = "era_e2013.jpg";
+  var ERA_ETRI = "era_etri.jpg";
+  var ERA_C_1949 = "era_c_1949.jpg";
+  var ERA_C_87 = "era_c_87.jpg";
+  var ERA_C_97 = "era_c_97.jpg";
+  var ERA_C_2004 = "era_c_2004.jpg";
+  var ERA_C_2010 = "era_c_2010.jpg";
+  var ERA_C_2017 = "era_c_2017.jpg";
+  var ERA_C_2026 = "era_c_2026.jpg";
+  var ERA_C_2006 = "era_c_2006.jpg";
   /* ==========================================================================
      2. DATA — contenido del sitio
      ========================================================================== */
@@ -105,71 +105,71 @@
   /* Fotos usadas por el arreglo `crossovers` (sección 05, "Cruzados"). Cada jugador
      que vistió ambas camisetas trae dos fotos (una por club); se agrupan aquí en
      pares AME/CHI en el mismo orden en que aparecen dentro de `crossovers`. */
-  var PHOTO_CROSS_ORIBE_AME = "assets/img/photo_cross_oribe_ame.jpg";
-  var PHOTO_CROSS_ORIBE_CHI = "assets/img/photo_cross_oribe_chi.jpg";
-  var PHOTO_CROSS_OSWALDO_AME = "assets/img/photo_cross_oswaldo_ame.jpg";
-  var PHOTO_CROSS_OSWALDO_CHI = "assets/img/photo_cross_oswaldo_chi.jpg";
+  var PHOTO_CROSS_ORIBE_AME = "photo_cross_oribe_ame.jpg";
+  var PHOTO_CROSS_ORIBE_CHI = "photo_cross_oribe_chi.jpg";
+  var PHOTO_CROSS_OSWALDO_AME = "photo_cross_oswaldo_ame.jpg";
+  var PHOTO_CROSS_OSWALDO_CHI = "photo_cross_oswaldo_chi.jpg";
 
-  var PHOTO_CROSS_RAMON_AME = "assets/img/photo_cross_ramon_ame.jpg";
-  var PHOTO_CROSS_RAMON_CHI = "assets/img/photo_cross_ramon_chi.jpg";
+  var PHOTO_CROSS_RAMON_AME = "photo_cross_ramon_ame.jpg";
+  var PHOTO_CROSS_RAMON_CHI = "photo_cross_ramon_chi.jpg";
 
-  var PHOTO_CROSS_COTA_CHI = "assets/img/photo_cross_cota_chi.jpg";
-  var PHOTO_CROSS_COTA_AME = "assets/img/photo_cross_cota_ame.jpg";
+  var PHOTO_CROSS_COTA_CHI = "photo_cross_cota_chi.jpg";
+  var PHOTO_CROSS_COTA_AME = "photo_cross_cota_ame.jpg";
 
-  var PHOTO_CROSS_PELAEZ_AME = "assets/img/photo_cross_pelaez_ame.jpg";
-  var PHOTO_CROSS_PELAEZ_CHI = "assets/img/photo_cross_pelaez_chi.jpg";
-  var PHOTO_CROSS_JOELSANCHEZ_CHI = "assets/img/photo_cross_joelsanchez_chi.jpg";
-  var PHOTO_CROSS_JOELSANCHEZ_AME = "assets/img/photo_cross_joelsanchez_ame.jpg";
-  var PHOTO_CROSS_MENDOZA_CHI = "assets/img/photo_cross_mendoza_chi.jpg";
-  var PHOTO_CROSS_MENDOZA_AME = "assets/img/photo_cross_mendoza_ame.jpg";
-  var PHOTO_CROSS_REYNA_AME = "assets/img/photo_cross_reyna_ame.jpg";
-  var PHOTO_CROSS_REYNA_CHI = "assets/img/photo_cross_reyna_chi.jpg";
-  var PHOTO_CROSS_MAZA_CHI = "assets/img/photo_cross_maza_chi.jpg";
-  var PHOTO_CROSS_MAZA_AME = "assets/img/photo_cross_maza_ame.jpg";
-  var PHOTO_CROSS_HERMOSILLO_AME = "assets/img/photo_cross_hermosillo_ame.jpg";
-  var PHOTO_CROSS_HERMOSILLO_CHI = "assets/img/photo_cross_hermosillo_chi.jpg";
-  var PHOTO_CROSS_AGUIRRE_AME = "assets/img/photo_cross_aguirre_ame.jpg";
-  var PHOTO_CROSS_AGUIRRE_CHI = "assets/img/photo_cross_aguirre_chi.jpg";
-  var PHOTO_CROSS_MOLINA_AME = "assets/img/photo_cross_molina_ame.jpg";
-  var PHOTO_CROSS_MOLINA_CHI = "assets/img/photo_cross_molina_chi.jpg";
+  var PHOTO_CROSS_PELAEZ_AME = "photo_cross_pelaez_ame.jpg";
+  var PHOTO_CROSS_PELAEZ_CHI = "photo_cross_pelaez_chi.jpg";
+  var PHOTO_CROSS_JOELSANCHEZ_CHI = "photo_cross_joelsanchez_chi.jpg";
+  var PHOTO_CROSS_JOELSANCHEZ_AME = "photo_cross_joelsanchez_ame.jpg";
+  var PHOTO_CROSS_MENDOZA_CHI = "photo_cross_mendoza_chi.jpg";
+  var PHOTO_CROSS_MENDOZA_AME = "photo_cross_mendoza_ame.jpg";
+  var PHOTO_CROSS_REYNA_AME = "photo_cross_reyna_ame.jpg";
+  var PHOTO_CROSS_REYNA_CHI = "photo_cross_reyna_chi.jpg";
+  var PHOTO_CROSS_MAZA_CHI = "photo_cross_maza_chi.jpg";
+  var PHOTO_CROSS_MAZA_AME = "photo_cross_maza_ame.jpg";
+  var PHOTO_CROSS_HERMOSILLO_AME = "photo_cross_hermosillo_ame.jpg";
+  var PHOTO_CROSS_HERMOSILLO_CHI = "photo_cross_hermosillo_chi.jpg";
+  var PHOTO_CROSS_AGUIRRE_AME = "photo_cross_aguirre_ame.jpg";
+  var PHOTO_CROSS_AGUIRRE_CHI = "photo_cross_aguirre_chi.jpg";
+  var PHOTO_CROSS_MOLINA_AME = "photo_cross_molina_ame.jpg";
+  var PHOTO_CROSS_MOLINA_CHI = "photo_cross_molina_chi.jpg";
 
-  var PHOTO_CROSS_VAZQUEZ_CHI = "assets/img/photo_cross_vazquez_chi.jpg";
-  var PHOTO_CROSS_VAZQUEZ_AME = "assets/img/photo_cross_vazquez_ame.jpg";
+  var PHOTO_CROSS_VAZQUEZ_CHI = "photo_cross_vazquez_chi.jpg";
+  var PHOTO_CROSS_VAZQUEZ_AME = "photo_cross_vazquez_ame.jpg";
 
   /* Fotos del arreglo `plays` (sección 06, "Jugadas"): una por partido/jugada. */
-  var PHOTO_PLAY_1944 = "assets/img/photo_play_1944.jpg";
+  var PHOTO_PLAY_1944 = "photo_play_1944.jpg";
 
-  var PHOTO_PLAY_1959A = "assets/img/photo_play_1959a.jpg";
-  var PHOTO_PLAY_1959B = "assets/img/photo_play_1959b.jpg";
+  var PHOTO_PLAY_1959A = "photo_play_1959a.jpg";
+  var PHOTO_PLAY_1959B = "photo_play_1959b.jpg";
 
-  var PHOTO_PLAY_1982 = "assets/img/photo_play_1982.jpg";
-  var PHOTO_PLAY_1983 = "assets/img/photo_play_1983.jpg";
-  var PHOTO_PLAY_1993 = "assets/img/photo_play_1993.jpg";
-  var PHOTO_PLAY_1996 = "assets/img/photo_play_1996.jpg";
-  var PHOTO_PLAY_2005 = "assets/img/photo_play_2005.jpg";
+  var PHOTO_PLAY_1982 = "photo_play_1982.jpg";
+  var PHOTO_PLAY_1983 = "photo_play_1983.jpg";
+  var PHOTO_PLAY_1993 = "photo_play_1993.jpg";
+  var PHOTO_PLAY_1996 = "photo_play_1996.jpg";
+  var PHOTO_PLAY_2005 = "photo_play_2005.jpg";
 
-  var PHOTO_PLAY_2016 = "assets/img/photo_play_2016.jpg";
-  var PHOTO_PLAY_2020 = "assets/img/photo_play_2020.jpg";
-  var PHOTO_PLAY_2026 = "assets/img/photo_play_2026.jpg";
+  var PHOTO_PLAY_2016 = "photo_play_2016.jpg";
+  var PHOTO_PLAY_2020 = "photo_play_2020.jpg";
+  var PHOTO_PLAY_2026 = "photo_play_2026.jpg";
 
   /* Más pares de fotos de "Cruzados" (agregados después de la tanda inicial de arriba). */
-  var PHOTO_CROSS_MARQUEZLUGO_AME = "assets/img/photo_cross_marquezlugo_ame.jpg";
-  var PHOTO_CROSS_MARQUEZLUGO_CHI = "assets/img/photo_cross_marquezlugo_chi.jpg";
+  var PHOTO_CROSS_MARQUEZLUGO_AME = "photo_cross_marquezlugo_ame.jpg";
+  var PHOTO_CROSS_MARQUEZLUGO_CHI = "photo_cross_marquezlugo_chi.jpg";
 
-  var PHOTO_CROSS_CALDERON_CHI = "assets/img/photo_cross_calderon_chi.jpg";
-  var PHOTO_CROSS_CALDERON_AME = "assets/img/photo_cross_calderon_ame.jpg";
+  var PHOTO_CROSS_CALDERON_CHI = "photo_cross_calderon_chi.jpg";
+  var PHOTO_CROSS_CALDERON_AME = "photo_cross_calderon_ame.jpg";
 
-  var PHOTO_CROSS_ZENDEJAS_CHI = "assets/img/photo_cross_zendejas_chi.jpg";
-  var PHOTO_CROSS_ZENDEJAS_AME = "assets/img/photo_cross_zendejas_ame.jpg";
+  var PHOTO_CROSS_ZENDEJAS_CHI = "photo_cross_zendejas_chi.jpg";
+  var PHOTO_CROSS_ZENDEJAS_AME = "photo_cross_zendejas_ame.jpg";
 
   /* Fotos de mascotas (sección 08, "Cultura"), mapeadas más abajo por atributo
      data-mascot en RENDER: mascotas. */
-  var PHOTO_MASCOT_AME_AGUI = "assets/img/photo_mascot_ame_agui.jpg";
-  var PHOTO_MASCOT_AME_CELESTE = "assets/img/photo_mascot_ame_celeste.jpg";
-  var PHOTO_MASCOT_AME_NEW = "assets/img/photo_mascot_ame_new.jpg";
-  var PHOTO_MASCOT_CHI_FIGHTER = "assets/img/photo_mascot_chi_fighter.jpg";
-  var PHOTO_MASCOT_CHI_LOCA = "assets/img/photo_mascot_chi_loca.jpg";
-  var PHOTO_MASCOT_CHI_RASTA = "assets/img/photo_mascot_chi_rasta.jpg";
+  var PHOTO_MASCOT_AME_AGUI = "photo_mascot_ame_agui.jpg";
+  var PHOTO_MASCOT_AME_CELESTE = "photo_mascot_ame_celeste.jpg";
+  var PHOTO_MASCOT_AME_NEW = "photo_mascot_ame_new.jpg";
+  var PHOTO_MASCOT_CHI_FIGHTER = "photo_mascot_chi_fighter.jpg";
+  var PHOTO_MASCOT_CHI_LOCA = "photo_mascot_chi_loca.jpg";
+  var PHOTO_MASCOT_CHI_RASTA = "photo_mascot_chi_rasta.jpg";
 
   /* Leyendas del Club América (sección 03 y también usadas en el lineup builder, sección 07).
      Campos de cada objeto:
