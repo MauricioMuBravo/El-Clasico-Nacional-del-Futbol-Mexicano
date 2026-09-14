@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clásico Nacional</title>
+<!--
+  EL CLÁSICO NACIONAL — micrositio de aficionado (América vs. Chivas)
+
+  Cómo está armado este archivo:
+  - Este HTML solo trae la estructura fija de la página (barra superior, portada
+    y el "cascarón" de cada sección con su título). El contenido que varía en
+    tamaño (leyendas, jugadas, planteles, preguntas del quiz, fuentes, etc.)
+    vive como datos en script.js y se inserta en tiempo de ejecución dentro de
+    los <div> vacíos que verás con un id (por ejemplo <div id="timeline"></div>).
+  - styles.css trae todo el diseño; no hay estilos inline salvo un par de
+    anchos calculados (las barras de la sección "Cifras").
+  - Las secciones están numeradas (01, 02, 03…) en el mismo orden del menú
+    de la barra superior.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Barra superior fija: marcador histórico (99·82·81) + menú de anclas a cada sección.
+     Los <img data-crest="ame|chi"> de toda la página se llenan por JS con el escudo real
+     (ver "RENDER: crests" en script.js) en vez de traer la ruta escrita a mano aquí. -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-score"><img class="topbar-crest" data-crest="ame" alt=""><b class="a">99</b>·<span>82</span>·<b class="c">81</b><img class="topbar-crest" data-crest="chi" alt=""></div>
+    <nav class="topbar-nav">
+      <a href="#historia">Historia</a>
+      <a href="#cifras">Cifras</a>
+      <a href="#leyendas">Leyendas</a>
+      <a href="#epocas">Épocas</a>
+      <a href="#cruzados">Cruzados</a>
+      <a href="#jugadas">Jugadas</a>
+      <a href="#alineacion">Alineación</a>
+      <a href="#cultura">Cultura</a>
+      <a href="#himnos">Himnos</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#prediccion">Predicción</a>
+    </nav>
+  </div>
+</div>
+
+<!-- PORTADA: título, "el volado" (moneda 3D con un escudo de cada lado que gira sola —
+     se pausa al tocarla, ver #hero-coin en script.js) y un ticker con las cifras clave. -->
+<header class="hero">
+  <div class="hero-field"></div>
+  <div class="wrap">
+    <div class="coin-scene" id="hero-coin" title="Toca para pausar el volado">
+      <div class="coin">
+        <div class="coin-face coin-front"><img data-crest="ame" alt="Escudo del Club América"></div>
+        <div class="coin-face coin-back"><img data-crest="chi" alt="Escudo de Chivas Guadalajara"></div>
+      </div>
+    </div>
+    <p class="coin-hint">el volado de siempre</p>
+    <p class="eyebrow hero-eyebrow">América · Chivas · desde 1943</p>
+    <h1 class="hero-title"><span class="split">EL CLÁSICO</span><span class="split">NACIONAL</span></h1>
+    <p class="hero-sub">El derbi más antiguo y más grande del futbol mexicano: Águilas contra Rebaño Sagrado, capital contra el club más mexicano del país.</p>
+    <div class="hero-ticker">
+      <span><b>262</b> partidos jugados</span>
+      <span><b>99 · 82 · 81</b> Amé · empates · Chivas</span>
+      <span><b>15 vs 12</b> títulos de Liga</span>
+    </div>
+    <p class="hero-scroll">↓ desliza para el recorrido completo</p>
+  </div>
+</header>
+
+<main>
+
+<!-- 01 — HISTORIA: línea de tiempo de hitos (fundaciones, primeros duelos, etc.).
+     El contenido de #timeline lo genera el arreglo `timeline` en script.js. -->
+<section id="historia">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">01 — Origen</p>
+      <h2>Cómo nació el Clásico</h2>
+      <p>De dos giras amistosas a la rivalidad que paraliza al país cada torneo. Así se construyó, partido a partido.</p>
+    </header>
+    <div class="timeline" id="timeline"></div>
+  </div>
+</section>
+
+<!-- 02 — CIFRAS: barra comparativa de resultados históricos + tarjetas de estadísticas sueltas.
+     Aquí sí hay contenido escrito a mano en el HTML (no se genera por JS), porque son pocos
+     datos fijos; el ancho de cada segmento de la barra (width:37.8% etc.) va inline a propósito. -->
+<section id="cifras">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">02 — El historial</p>
+      <h2>El Clásico, en números</h2>
+      <p>Cifras acumuladas en 262 encuentros oficiales y amistosos entre ambos clubes, actualizadas a 2025.</p>
+    </header>
+
+    <div class="bar-compare">
+      <div class="bar-labels"><span class="a">AMÉRICA · 99</span><span>EMPATES · 82</span><span class="c">CHIVAS · 81</span></div>
+      <div class="bar-track">
+        <div class="bar-seg a" style="width:37.8%">99</div>
+        <div class="bar-seg d" style="width:31.3%">82</div>
+        <div class="bar-seg c" style="width:30.9%">81</div>
+      </div>
+      <p class="bar-foot">América lidera el historial general, aunque Chivas ha ganado terreno en la era moderna.</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-tile">
+        <div class="num"><span class="a">15</span><span class="vs">vs</span><span class="c">12</span></div>
+        <div class="label">Títulos de Liga MX</div>
+        <div class="foot">América es el club más ganador del torneo; Chivas, el más mexicano.</div>
+      </div>
+      <div class="stat-tile">
+        <div class="num"><span class="c">13</span><span class="vs">vs</span><span class="a">10</span></div>
+        <div class="label">Goles en el Clásico</div>
+        <div class="foot">Salvador Reyes (Chivas) es el máximo goleador histórico del duelo; le sigue Luis "Zague" Alves.</div>
+      </div>
+      <div class="stat-tile">
+        <div class="num mono">7-2</div>
+        <div class="label">La primera goleada</div>
+        <div class="foot">América, 20 de febrero de 1944, apenas un mes después del primer duelo de liga.</div>
+      </div>
+      <div class="stat-tile">
+        <div class="num mono">74,765</div>
+        <div class="label">Récord de asistencia</div>
+        <div class="foot">Estadio Azteca, 1 de octubre de 2018 — la mayor entrada post-remodelación del inmueble.</div>
+      </div>
+      <div class="stat-tile">
+        <div class="num"><span class="a">87,000</span></div>
+        <div class="label">Aforo del Azteca</div>
+        <div class="foot">Casa de América, tras la remodelación de 2026.</div>
+      </div>
+      <div class="stat-tile">
+        <div class="num"><span class="c">46,355</span></div>
+        <div class="label">Aforo del Akron</div>
+        <div class="foot">"El Templo Mayor", casa de Chivas desde 2010.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 — LEYENDAS: tarjetas que se voltean con la bio de cada ídolo (una columna por club).
+     #legends-america y #legends-chivas se llenan desde los arreglos `legendsAmerica` /
+     `legendsChivas` en script.js (función renderLegends), agrupadas por posición. -->
+<section id="leyendas">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">03 — Ídolos</p>
+      <h2>Leyendas de cada bando</h2>
+      <p>Nombres por escudo, con sus cifras en el club. Toca una carta para ver por qué se volvieron intocables para su afición.</p>
+    </header>
+    <div class="grid-2">
+      <div>
+        <div class="side-head"><img class="side-crest" data-crest="ame" alt="Escudo del Club América"><h3>Club América</h3></div>
+        <div class="card-grid" id="legends-america"></div>
+      </div>
+      <div>
+        <div class="side-head"><img class="side-crest" data-crest="chi" alt="Escudo de Chivas Guadalajara"><h3>Chivas Guadalajara</h3></div>
+        <div class="card-grid" id="legends-chivas"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 — ÉPOCAS: agrupa a las leyendas de arriba por generación (arreglos `erasAmerica` /
+     `erasChivas`) y, debajo, un carrete de fotos de plantel completo por década
+     (`teamPhotosAmerica` / `teamPhotosChivas`), ambos generados en script.js. -->
+<section id="epocas">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">04 — Generaciones</p>
+      <h2>Grandes planteles por época</h2>
+      <p>Agrupando a las leyendas de arriba por generación. No son alineaciones oficiales ni onces completos — son quienes coincidieron en cada etapa según lo documentado; varias décadas todavía tienen huecos.</p>
+    </header>
+    <div class="grid-2">
+      <div>
+        <div class="side-head"><img class="side-crest" data-crest="ame" alt="Escudo del Club América"><h3>Club América</h3></div>
+        <div class="era-list" id="eras-america"></div>
+      </div>
+      <div>
+        <div class="side-head"><img class="side-crest" data-crest="chi" alt="Escudo de Chivas Guadalajara"><h3>Chivas Guadalajara</h3></div>
+        <div class="era-list" id="eras-chivas"></div>
+      </div>
+    </div>
+    <div class="team-photo-block">
+      <h3 class="team-photo-title">Álbum de planteles — Club América</h3>
+      <p class="bar-foot">Fotos de equipo completo por época. Desliza para verlas todas.</p>
+      <div class="team-photo-reel" id="team-photos-america"></div>
+    </div>
+    <div class="team-photo-block">
+      <h3 class="team-photo-title">Álbum de planteles — Chivas Guadalajara</h3>
+      <p class="bar-foot">Fotos de equipo completo por época. Desliza para verlas todas.</p>
+      <div class="team-photo-reel" id="team-photos-chivas"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 — CRUZADOS: jugadores que vistieron ambas camisetas. #cross-grid se llena desde el
+     arreglo `crossovers` en script.js; cada tarjeta trae una foto circular que voltea entre
+     la playera de salida y la de llegada al tocarla. -->
+<section id="cruzados">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">05 — Alta traición</p>
+      <h2>Han vestido ambas camisetas</h2>
+      <p>Cambiar de bando en el Clásico es casi un tabú. Estos jugadores lo hicieron de forma documentada, con año de transferencia confirmado.</p>
+    </header>
+    <div class="cross-grid" id="cross-grid"></div>
+  </div>
+</section>
+
+<!-- 06 — JUGADAS: carrete horizontal de partidos/jugadas memorables (arreglo `plays` en
+     script.js), con scroll-snap para "clavar" cada tarjeta al deslizar. -->
+<section id="jugadas">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">06 — Momentos</p>
+      <h2>Jugadas y partidos para la historia</h2>
+      <p>Desliza el carrete: once capítulos que explican por qué este derbi se juega también en la memoria.</p>
+    </header>
+    <div class="reel" id="reel"></div>
+  </div>
+</section>
+
+<!-- 07 — ALINEACIÓN ("Arma tu Once Ideal"): la parte más interactiva del sitio.
+     - .lineup-toggle: botones para cambiar entre América y Chivas.
+     - #pitch: la cancha; su contenido (filas de posiciones, círculos, líneas del campo) se
+       construye por completo en JS (buildPitch / drawPitchMarkings en script.js) — aquí solo
+       queda el <div> vacío.
+     - #pool: la "banca" con todas las leyendas disponibles para colocar, agrupadas por posición.
+     - #lineup-reset / #lineup-replay: limpiar la cancha o volver a escuchar el sonido de
+       celebración al completar los 11 puestos. -->
+<section id="alineacion">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">07 — Interactivo</p>
+      <h2>Arma tu Once Ideal</h2>
+      <p>Elige un club y coloca a sus leyendas donde tú quieras sobre la cancha. Es tu alineación soñada, no una táctica oficial — hay más leyendas que puestos, así que toca dejar a alguna en la banca. Complétala y escucha lo que pasa.</p>
+    </header>
+    <div class="lineup-toggle" role="tablist">
+      <button data-club="america" class="active" role="tab" aria-selected="true"><img class="toggle-crest" data-crest="ame" alt="">América</button>
+      <button data-club="chivas" role="tab" aria-selected="false"><img class="toggle-crest" data-crest="chi" alt="">Chivas</button>
+    </div>
+    <p class="lineup-note" id="lineup-note"></p>
+    <div class="pitch-wrap">
+      <div class="pitch" id="pitch" data-active-club="america"></div>
+    </div>
+    <div class="pool" id="pool"></div>
+    <div class="lineup-actions">
+      <button class="btn" id="lineup-reset">Limpiar cancha</button>
+      <button class="btn primary" id="lineup-replay" type="button" hidden>🔊 Escuchar otra vez</button>
+      <span class="quiz-toast" id="lineup-toast"></span>
+    </div>
+  </div>
+</section>
+
+<!-- 08 — CULTURA: apodos, mascotas y anécdotas de cada club, escritas directo en el HTML
+     (son pocas tarjetas fijas). Las fotos de mascotas (<img data-mascot="...">) se llenan por
+     JS igual que los escudos (ver "RENDER: mascotas" en script.js). -->
+<section id="cultura">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">08 — Identidad</p>
+      <h2>Más que 90 minutos</h2>
+      <p>Apodos, mascotas y una filosofía que hace único a cada club en la Liga MX.</p>
+    </header>
+    <div class="culture-grid">
+      <div class="culture-card">
+        <h3>Las Águilas</h3>
+        <p>El apodo nació en 1981, cuando el directivo de Televisa Emilio Díez Barroso relanzó la imagen del club — hasta entonces "cremas" o "canarios" — presentando a "Cuauhtli", un águila real como primera mascota oficial. "Agui" es la mascota disfrazada que anima al Azteca; Celeste, la mascota viva, es quien vuela sobre la cancha antes de cada partido.</p>
+        <div class="mascot-strip">
+          <div class="mascot-item"><img src="" data-mascot="ame-agui" alt=""><span>Agui, la mascota disfrazada</span></div>
+          <div class="mascot-item"><img src="" data-mascot="ame-celeste" alt=""><span>Celeste, el águila real del Azteca</span></div>
+          <div class="mascot-item"><img src="" data-mascot="ame-new" alt=""><span>Versión más reciente del disfraz</span></div>
+        </div>
+        <img class="culture-crest" data-crest="ame" alt="">
+      </div>
+      <div class="culture-card">
+        <h3>El Rebaño Sagrado</h3>
+        <p>Chivas es, desde su fundación en 1906, el único club de la Liga MX con la política de alinear exclusivamente futbolistas nacidos en México, una identidad que defiende con orgullo aun siendo, irónicamente, un club fundado por el belga Edgar Everaert.</p>
+        <img class="culture-crest" data-crest="chi" alt="">
+      </div>
+      <div class="culture-card">
+        <h3>La mascota rojiblanca</h3>
+        <p>"La Chiva Loca" es la mascota histórica que animó el Estadio Akron ("El Templo Mayor") durante casi cuatro décadas, un símbolo tan querido como el propio escudo. El club también tuvo, entre 2009 y 2010, una versión superhéroe llamada "Chiva Fighter", y más recientemente presentó a "La Chiva", su nueva mascota.</p>
+        <div class="mascot-strip">
+          <div class="mascot-item"><img src="" data-mascot="chi-fighter" alt=""><span>Chiva Fighter (2009-2010)</span></div>
+          <div class="mascot-item"><img src="" data-mascot="chi-loca" alt=""><span>La Chiva Loca</span></div>
+          <div class="mascot-item"><img src="" data-mascot="chi-rasta" alt=""><span>La Chiva, la mascota más reciente</span></div>
+        </div>
+      </div>
+      <div class="culture-card">
+        <h3>1981, el año bisagra para América</h3>
+        <p>La misma temporada del cambio a "Águilas", el club estrenó el 25 de septiembre de 1981 su himno oficial, compuesto por Carlos Blanco, ante Puebla en el Estadio Azteca. Identidad y himno nacieron casi juntos.</p>
+      </div>
+      <div class="culture-card quote">
+        <span>“América no viene a Guadalajara a ganar, eso es rutina.”</span>
+        <small>Fernando Marcos González, entrenador de América, 5 de agosto de 1959 — la frase que encendió el Clásico moderno. Chivas respondió con una victoria propia semanas después.</small>
+      </div>
+      <div class="culture-card">
+        <h3>Fundaciones casi 10 años aparte</h3>
+        <p>Chivas nació el 8 de mayo de 1906; el América, el 12 de octubre de 1916, fundado por Rafael Garza "Récord". Sus primeros duelos documentados llegarían dos décadas después, en 1926.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 — HIMNOS: no se puede incrustar el audio oficial ni un reproductor de YouTube, así que
+     cada tarjeta trae la ficha del himno (autor, estreno, versiones) y un link externo. El
+     "ambiente de estadio" que sí suena en la página se maneja aparte, al final de script.js. -->
+<section id="himnos">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">09 — Se escucha desde las gradas</p>
+      <h2>Los himnos</h2>
+      <p>No podemos redistribuir el audio oficial de los himnos como archivo, ni esta página puede incrustar el reproductor de YouTube. Pero sí podemos ponerte en ambiente: así suena la grada en día de partido.</p>
+    </header>
+    <div class="grid-2">
+      <div class="anthem-card" data-club="america">
+        <h3>Himno del Club América</h3>
+        <p class="anthem-quote">"¡Águilas a ganar! América, ¡Águilas!"</p>
+        <div class="anthem-list">
+          <div class="row"><b>Autor:</b> Carlos Blanco</div>
+          <div class="row"><b>Estreno:</b> 25 de septiembre de 1981, Estadio Azteca, ante Puebla</div>
+          <div class="row"><b>Contexto:</b> Llegó la misma temporada del relanzamiento del club como "Águilas".</div>
+        </div>
+        <a class="anthem-link" href="https://www.youtube.com/watch?v=TKd_GYmo670" target="_blank" rel="noopener">Escúchalo completo en YouTube ↗</a>
+      </div>
+      <div class="anthem-card" data-club="chivas">
+        <h3>Himnos de Chivas Guadalajara</h3>
+        <p class="anthem-quote">Tres versiones oficiales a lo largo de su historia.</p>
+        <div class="anthem-list">
+          <div class="row"><b>Original:</b> de Luis Aguillé, interpretado por José Manuel Correa con el Mariachi Vargas de Tecalitlán — el más querido por la afición.</div>
+          <div class="row"><b>2006:</b> versión pop de Paulino Monroy para el centenario del club; tuvo baja aceptación.</div>
+          <div class="row"><b>Actual (2010):</b> compuesto por Reyli para la inauguración del Estadio Omnilife, hoy Akron — la del enlace de abajo.</div>
+        </div>
+        <a class="anthem-link" href="https://www.youtube.com/watch?v=Mr61JbHOyTo" target="_blank" rel="noopener">Escúchalo completo en YouTube ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 — QUIZ: ocho preguntas (arreglo `quiz` en script.js), una a la vez, con puntaje final
+     y botón para copiar el resultado. Todo #quiz-box lo dibuja renderQuestion()/renderResult(). -->
+<section id="quiz">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">10 — Pon a prueba lo que leíste</p>
+      <h2>¿Cuánto sabes del Clásico?</h2>
+      <p>Ocho preguntas, todas basadas en los datos de esta página.</p>
+    </header>
+    <div class="quiz-box" id="quiz-box"></div>
+  </div>
+</section>
+
+<!-- 11 — PREDICCIÓN: tres botones fijos (América / Empate / Chivas); el mensaje de respuesta
+     sale de `predictMessages` en script.js según el botón elegido. -->
+<section id="prediccion">
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">11 — Antes de irte</p>
+      <h2>¿Quién gana el próximo Clásico?</h2>
+      <p>Nada de estadísticas ni algoritmos — solo tu corazonada.</p>
+    </header>
+    <div class="predict-box" id="predict-box">
+      <button class="predict-opt" data-pick="america" type="button">Gana América</button>
+      <button class="predict-opt" data-pick="empate" type="button">Empate</button>
+      <button class="predict-opt" data-pick="chivas" type="button">Gana Chivas</button>
+    </div>
+    <p class="predict-result" id="predict-result"></p>
+  </div>
+</section>
+
+</main>
+
+<!-- Pie de página: aviso de que el sitio es de aficionado y lista de fuentes periodísticas,
+     generada dentro de #sources a partir del arreglo `sources` en script.js. -->
+<footer>
+  <div class="wrap">
+    <p>Página hecha por y para aficionados, sin fines oficiales ni vínculo con Club América, C.D. Guadalajara o la Liga MX. Datos verificados con las fuentes periodísticas listadas abajo, con corte a 2025-2026.</p>
+    <div class="sources" id="sources"></div>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

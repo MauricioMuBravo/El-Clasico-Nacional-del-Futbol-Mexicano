@@ -1,0 +1,471 @@
+/* ==========================================================================
+   EL CLÁSICO NACIONAL — hoja de estilos
+   Micrositio de aficionado sobre América vs. Chivas.
+
+   Índice de este archivo (buscar por el título entre "----"):
+     1.  :root                — variables de color, espaciado y tipografía
+     2.  Reset / base         — box-sizing, body, encabezados, links
+     3.  Topbar               — barra superior fija con marcador y menú
+     4.  Hero                 — portada con el "volado" (escudo 3D) y título
+     5.  Timeline             — línea de tiempo de la sección "Historia"
+     6.  Cifras               — barra comparativa y tarjetas de estadísticas
+     7.  Cards / grid shells  — rejillas genéricas reutilizadas por varias secciones
+     8.  Legend flip cards    — tarjetas de leyendas que se voltean (bio en el reverso)
+     9.  Épocas               — planteles por generación + carrete de fotos de equipo
+     10. Cruzados             — jugadores que vistieron ambas camisetas (foto que voltea)
+     11. Reel (jugadas)       — carrete horizontal de partidos históricos
+     12. Lineup builder       — cancha interactiva "Arma tu Once Ideal"
+     13. Cultura              — tarjetas de apodos, mascotas y anécdotas
+     14. Himnos               — tarjetas de los himnos de cada club
+     15. Predicción           — botones de pronóstico del próximo Clásico
+     16. Quiz                 — caja de preguntas y resultado final
+     17. Footer               — créditos y fuentes
+   ========================================================================== */
+
+/* ---------- 1. Variables globales ---------- */
+:root{
+    /* Fondos y superficies (tema oscuro fijo) */
+    --ink:#0b0d12;
+    --ink-2:#12161f;
+    --ink-3:#1a2029;
+    /* Texto */
+    --paper:#f4efe4;
+    --paper-dim:#c9c3b6;
+    /* Paleta América (azul + dorado) */
+    --america-blue:#0d2c66;
+    --america-blue-2:#173a80;
+    --america-gold:#f0b429;
+    /* Paleta Chivas (rojo + blanco) */
+    --chivas-red:#c8102e;
+    --chivas-red-2:#9c0c22;
+    --chivas-white:#f7f4ee;
+    /* Otros acentos */
+    --turf:#152b20;      /* verde de la cancha del lineup builder */
+    --ok:#3fae7a;         /* verde de "respuesta correcta" en el quiz */
+    --bad:#e08a2b;        /* naranja de "respuesta incorrecta" en el quiz */
+    --line:rgba(244,239,228,0.14); /* líneas/bordes sutiles sobre fondo oscuro */
+    /* Escala de espaciado (se usa en padding/gap/margin en vez de valores sueltos) */
+    --space-1:.5rem;
+    --space-2:1rem;
+    --space-3:1.5rem;
+    --space-4:2.25rem;
+    --space-5:3.5rem;
+    --space-6:5rem;
+    /* Escala tipográfica — los tamaños con clamp() son fluidos entre mobile y desktop */
+    --fs-body:1rem;
+    --fs-lead:1.15rem;
+    --fs-h3:1.3rem;
+    --fs-h2:clamp(1.9rem,4vw,2.7rem);
+    --fs-hero:clamp(2.8rem,10vw,6.6rem);
+    --fs-score:clamp(1.6rem,4vw,2.2rem);
+    --radius:10px;
+    color-scheme: dark; /* le dice al navegador que use widgets nativos (scrollbars, etc.) en modo oscuro */
+  }
+
+  /* ---------- 2. Reset y estilos base ---------- */
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; } /* scroll suave al usar los enlaces #ancla del menú */
+  @media (prefers-reduced-motion: reduce){
+    /* Respeta a quien pide menos animación en su sistema operativo:
+       desactiva el scroll suave y acorta cualquier animación/transición a casi 0. */
+    html{ scroll-behavior:auto; }
+    *,*::before,*::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  }
+
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Karla',-apple-system,'Segoe UI',sans-serif;
+    font-size:var(--fs-body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* Títulos: tipografía condensada tipo cartel deportivo (Anton), todo en mayúsculas */
+  h1,h2,h3{ font-family:'Anton',Impact,'Arial Narrow Bold',sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.01em; text-wrap:balance; margin:0; }
+  h2{ font-size:var(--fs-h2); color:var(--paper); }
+  h3{ font-size:var(--fs-h3); }
+  p{ margin:0; }
+  a{ color:var(--america-gold); }
+  /* Contorno de foco visible (accesibilidad de teclado) en links, botones y los controles interactivos del lineup builder */
+  a:focus-visible, button:focus-visible, .slot:focus-visible, .chip:focus-visible{ outline:2px solid var(--america-gold); outline-offset:3px; }
+  button{ font-family:inherit; }
+
+  .mono{ font-family:'Space Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; } /* números que no "bailan" de ancho al cambiar (marcador, cifras) */
+  .eyebrow{ font-family:'Space Mono',monospace; text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; color:var(--paper-dim); } /* etiqueta pequeña tipo "01 — Origen" arriba de cada título de sección */
+
+  .wrap{ max-width:1100px; margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2rem); } /* contenedor centrado que usan todas las secciones */
+  section{ padding-block:var(--space-6); border-top:1px solid var(--line); }
+  section > .wrap > header{ margin-bottom:var(--space-4); display:flex; flex-direction:column; gap:.5rem; }
+  section > .wrap > header p{ color:var(--paper-dim); max-width:62ch; font-size:var(--fs-lead); }
+
+  /* ---------- 3. Topbar ---------- */
+  /* Barra fija arriba con el marcador histórico (99·82·81) y el menú de anclas a cada sección. */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:rgba(11,13,18,0.92); backdrop-filter:blur(6px); /* efecto "vidrio esmerilado" al hacer scroll debajo */
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{ max-width:1100px; margin-inline:auto; padding:.6rem clamp(1.1rem,4vw,2rem); display:flex; align-items:center; gap:1.25rem; }
+  .topbar-score{ font-family:'Space Mono',monospace; font-size:.75rem; white-space:nowrap; display:flex; align-items:center; gap:.4rem; }
+  .topbar-score b.a{ color:var(--america-gold); }
+  .topbar-score b.c{ color:var(--chivas-red); }
+  .topbar-crest{ width:16px; height:16px; object-fit:contain; }
+  /* Menú horizontal con scroll propio en mobile; el mask-image difumina el borde derecho
+     para insinuar que hay más enlaces si el usuario no ha hecho scroll dentro del menú. */
+  .topbar-nav{ display:flex; gap:1.1rem; overflow-x:auto; scrollbar-width:none; -webkit-mask-image:linear-gradient(to right, black calc(100% - 28px), transparent); mask-image:linear-gradient(to right, black calc(100% - 28px), transparent); padding-right:28px; }
+  .topbar-nav::-webkit-scrollbar{ display:none; } /* oculta la barra de scroll en navegadores WebKit, el mask ya avisa visualmente */
+  .topbar-nav a{ color:var(--paper-dim); text-decoration:none; font-size:.82rem; white-space:nowrap; padding:.25rem 0; border-bottom:2px solid transparent; }
+  .topbar-nav a:hover{ color:var(--paper); border-color:var(--america-gold); }
+  @media (max-width:560px){
+    /* En pantallas angostas el marcador ocupa espacio valioso: se oculta y solo queda el menú. */
+    .topbar-score{ display:none; }
+    .topbar-inner{ gap:0; }
+  }
+
+  /* ---------- 4. Hero ---------- */
+  /* Portada: fondo con degradados sutiles, la "moneda" 3D que gira mostrando los dos escudos
+     (el volado), el título partido en dos colores y el ticker de cifras rápidas. */
+  .hero{ position:relative; padding-block:clamp(3rem,8vw,5.5rem) var(--space-6); overflow:hidden; border-top:none; }
+  .hero-field{
+    position:absolute; inset:0; z-index:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 8%, rgba(240,180,41,0.14), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 50% 8%, rgba(200,16,46,0.10), transparent 70%);
+  }
+  .hero-field::after{
+    /* Línea vertical degradada (dorado → rojo) al centro, como si dividiera el "campo" en dos mitades */
+    content:""; position:absolute; left:50%; top:0; bottom:0; width:1px; transform:translateX(-50%);
+    background:linear-gradient(var(--america-gold), var(--chivas-red));
+    opacity:.3;
+    -webkit-mask-image:linear-gradient(to bottom, transparent, black 22%, black 40%, transparent 62%);
+    mask-image:linear-gradient(to bottom, transparent, black 22%, black 40%, transparent 62%);
+  }
+  .hero .wrap{ position:relative; z-index:1; text-align:center; display:flex; flex-direction:column; align-items:center; gap:var(--space-3); }
+
+  /* "El volado de siempre": una moneda en 3D con un escudo en cada cara que gira sola.
+     .coin-scene define la perspectiva; .coin es el objeto 3D que rota (animación "spin");
+     cada .coin-face es una cara ocultada con backface-visibility cuando queda de espaldas. */
+  .coin-scene{ perspective:900px; width:148px; height:148px; cursor:pointer; }
+  .coin{ position:relative; width:100%; height:100%; transform-style:preserve-3d; animation:spin 7s linear infinite; }
+  .coin-scene.paused .coin{ animation-play-state:paused; } /* clase que agrega el JS al hacer click, para pausar el giro */
+  @keyframes spin{ to{ transform:rotateY(360deg); } }
+  .coin-face{
+    display:flex; position:absolute; inset:0; border-radius:50%; backface-visibility:hidden;
+    align-items:center; justify-content:center; padding:16px;
+    background:radial-gradient(circle at 38% 32%, var(--paper), #ddd5c1 82%);
+    box-shadow:0 10px 30px rgba(0,0,0,.5), inset 0 0 0 3px rgba(244,239,228,.25);
+  }
+  .coin-face img{ display:block; width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 2px 5px rgba(0,0,0,.4)); }
+  .coin-front{ box-shadow:0 10px 30px rgba(0,0,0,.5), inset 0 0 0 3px var(--america-gold); }
+  .coin-back{ transform:rotateY(180deg); box-shadow:0 10px 30px rgba(0,0,0,.5), inset 0 0 0 3px var(--chivas-red); } /* pre-rotada 180° para quedar "detrás" de la cara frontal */
+  .coin-hint{ margin-top:.5rem; font-family:'Space Mono',monospace; font-size:.65rem; color:var(--paper-dim); opacity:.75; text-align:center; }
+
+  .hero-eyebrow{ color:var(--paper-dim); }
+  .hero-title{ font-size:var(--fs-hero); line-height:.92; margin:0; }
+  .hero-title span{ display:block; }
+  .hero-title .split{
+    /* Texto con degradado América→Chivas recortado a la silueta de las letras (background-clip:text) */
+    background:linear-gradient(90deg, var(--america-gold) 0%, var(--america-blue-2) 42%, var(--chivas-red-2) 58%, var(--chivas-white) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero-sub{ max-width:52ch; font-size:var(--fs-lead); color:var(--paper-dim); }
+  .hero-ticker{ display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem 1.6rem; font-family:'Space Mono',monospace; font-size:.85rem; color:var(--paper-dim); margin-top:.25rem; }
+  .hero-ticker b{ color:var(--paper); }
+  .hero-scroll{ margin-top:var(--space-2); font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--paper-dim); animation:bob 2.2s ease-in-out infinite; } /* texto "↓ desliza" que sube y baja para invitar al scroll */
+  @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(6px);} }
+
+  /* ---------- 5. Timeline (sección "Historia") ---------- */
+  /* Lista vertical con una línea guía a la izquierda y un punto por cada hito (.t-item::before). */
+  .timeline{ display:flex; flex-direction:column; gap:0; border-left:2px solid var(--line); margin-left:.4rem; }
+  .t-item{ position:relative; padding:0 0 var(--space-4) var(--space-4); }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-item::before{
+    content:""; position:absolute; left:-7px; top:.35rem; width:12px; height:12px; border-radius:50%;
+    background:var(--ink); border:2px solid var(--america-gold); /* punto dorado por defecto (hito de América) */
+  }
+  .t-item.chi::before{ border-color:var(--chivas-red); } /* punto rojo si el hito es de Chivas (clase añadida por JS) */
+  .t-date{ font-family:'Space Mono',monospace; font-weight:700; color:var(--america-gold); font-size:.95rem; }
+  .t-item.chi .t-date{ color:var(--chivas-red); }
+  .t-item h3{ margin:.15rem 0 .35rem; font-size:1.1rem; }
+  .t-item p{ color:var(--paper-dim); max-width:64ch; }
+
+  /* ---------- 6. Cifras ---------- */
+  /* Barra horizontal proporcional (victorias América / empates / victorias Chivas) + rejilla de estadísticas sueltas. */
+  .bar-compare{ display:flex; flex-direction:column; gap:.6rem; margin-bottom:var(--space-4); }
+  .bar-labels{ display:flex; justify-content:space-between; font-family:'Space Mono',monospace; font-size:.95rem; }
+  .bar-labels .a{ color:var(--america-gold); }
+  .bar-labels .c{ color:var(--chivas-red); }
+  .bar-track{ display:flex; height:34px; border-radius:6px; overflow:hidden; background:var(--ink-3); }
+  .bar-seg{ display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:.78rem; } /* cada segmento trae su ancho en % puesto inline en el HTML */
+  .bar-seg.a{ background:linear-gradient(90deg, var(--america-blue), var(--america-blue-2)); color:var(--america-gold); }
+  .bar-seg.d{ background:var(--ink-3); color:var(--paper-dim); }
+  .bar-seg.c{ background:linear-gradient(90deg, var(--chivas-red-2), var(--chivas-red)); color:var(--chivas-white); }
+  .bar-foot{ font-size:.82rem; color:var(--paper-dim); }
+
+  /* Rejilla de tarjetas de estadísticas: 1 columna en mobile, 2 en tablet, 3 en desktop. */
+  .stat-grid{ display:grid; grid-template-columns:1fr; gap:1px; background:var(--line); border:1px solid var(--line); } /* el gap de 1px + fondo var(--line) simulan líneas divisorias entre celdas */
+  @media (min-width:620px){ .stat-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (min-width:940px){ .stat-grid{ grid-template-columns:repeat(3,1fr); } }
+  .stat-tile{ background:var(--ink); padding:var(--space-3); display:flex; flex-direction:column; gap:.3rem; }
+  .stat-tile .num{ font-family:'Space Mono',monospace; font-size:1.8rem; font-weight:700; }
+  .stat-tile .num .vs{ color:var(--paper-dim); font-weight:400; font-size:1.1rem; margin-inline:.25rem; }
+  .stat-tile .a{ color:var(--america-gold); }
+  .stat-tile .c{ color:var(--chivas-red); }
+  .stat-tile .label{ font-size:.82rem; color:var(--paper-dim); }
+  .stat-tile .foot{ font-size:.72rem; color:var(--paper-dim); opacity:.8; }
+
+  /* ---------- 7. Cards / rejillas genéricas ---------- */
+  /* .grid-2 se reutiliza en "Leyendas", "Épocas" y "Himnos" para poner una columna América y una Chivas lado a lado. */
+  .grid-2{ display:grid; grid-template-columns:1fr; gap:var(--space-5); }
+  @media (min-width:760px){ .grid-2{ grid-template-columns:1fr 1fr; } }
+  .side-head{ display:flex; align-items:center; gap:.7rem; margin-bottom:var(--space-3); } /* escudo + nombre de club, encabezando cada columna */
+  .side-crest{ width:30px; height:30px; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(0,0,0,.45)); }
+  .side-head h3{ font-size:1.3rem; }
+
+  /* Rejilla de 2 columnas para las tarjetas de leyendas, con etiquetas de grupo (Porteros/Defensas/...)
+     que ocupan todo el ancho (grid-column:1/-1) y una regla para "acomodar" una tarjeta impar sola,
+     centrada, cuando un grupo tiene un número impar de jugadores (.legend-solo). */
+  .card-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:.9rem; }
+  .card-grid > .legend-solo{ grid-column:1 / -1; }
+  .card-grid > .legend-solo .legend-inner{ max-width:calc(50% - .45rem); margin-inline:auto; }
+  .legend-group-label{ grid-column:1 / -1; font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--paper-dim); border-bottom:1px solid var(--line); padding-bottom:.35rem; margin-top:.4rem; }
+  .card-grid > .legend-group-label:first-child{ margin-top:0; }
+  @media (max-width:420px){
+    /* En celulares muy angostos, una sola columna se lee mejor que dos apretadas */
+    .card-grid{ grid-template-columns:1fr; }
+    .card-grid > .legend-solo .legend-inner{ max-width:none; }
+  }
+
+  /* ---------- 8. Tarjetas de leyendas (flip 3D) ---------- */
+  /* Cada tarjeta es un botón que, al hacer click, agrega la clase .flipped y rota .legend-inner
+     180° en el eje Y: la cara frontal (foto + nombre) queda "de espaldas" y aparece la trasera (stats + bio).
+     backface-visibility:hidden es lo que evita ver el reverso de cada cara "al derecho" mientras gira. */
+  .legend-card{ display:block; background:none; border:0; padding:0; cursor:pointer; perspective:1000px; height:272px; width:100%; text-align:left; color:inherit; }
+  .legend-inner{ display:block; position:relative; width:100%; height:100%; transition:transform .55s cubic-bezier(.2,.7,.3,1); transform-style:preserve-3d; }
+  .legend-card.flipped .legend-inner{ transform:rotateY(180deg); }
+  .legend-face{ display:flex; position:absolute; inset:0; backface-visibility:hidden; border-radius:var(--radius); padding:.9rem; flex-direction:column; gap:.35rem; background:var(--ink-2); border-top:3px solid var(--america-gold); box-shadow:0 1px 0 var(--line); overflow-y:auto; }
+  .legend-card[data-club="chivas"] .legend-face{ border-top-color:var(--chivas-red); } /* el JS pone data-club="chivas" en las tarjetas del Rebaño */
+  .legend-face.legend-front{ align-items:center; text-align:center; }
+  .legend-back{ transform:rotateY(180deg); justify-content:center; } /* pre-rotada para que, al girar la tarjeta completa, quede "al derecho" */
+  .legend-mono{ display:block; font-family:'Anton',sans-serif; font-size:1.7rem; color:var(--america-gold); line-height:1; } /* iniciales grandes, respaldo cuando una leyenda no tiene foto */
+  .legend-card[data-club="chivas"] .legend-mono{ color:var(--chivas-red); }
+  .legend-photo{ display:block; width:112px; height:112px; object-fit:cover; object-position:top center; border-radius:12px; border:2px solid var(--america-gold); }
+  .legend-card[data-club="chivas"] .legend-photo{ border-color:var(--chivas-red); }
+  .legend-name{ display:block; font-size:.95rem; font-weight:700; margin-top:auto; }
+  .legend-role{ display:block; font-size:.72rem; color:var(--paper-dim); font-family:'Space Mono',monospace; }
+  .legend-hint{ display:block; font-size:.68rem; color:var(--paper-dim); font-style:italic; white-space:nowrap; }
+  .legend-stats{ display:block; font-family:'Space Mono',monospace; font-size:.7rem; letter-spacing:.01em; color:var(--america-gold); background:rgba(240,180,41,.08); border:1px solid rgba(240,180,41,.3); border-radius:6px; padding:.3rem .55rem; }
+  .legend-card[data-club="chivas"] .legend-stats{ color:var(--chivas-red); background:rgba(200,16,46,.08); border-color:rgba(200,16,46,.3); }
+  .legend-bio{ display:block; font-size:.8rem; color:var(--paper-dim); }
+
+  /* ---------- 9. Épocas ---------- */
+  /* Tarjetas de "plantel por generación" (años + jugadores de esa época) y, debajo, un carrete
+     horizontal de fotos de equipo completo por década (con scroll-snap para que "encajen" al deslizar). */
+  .era-list{ display:flex; flex-direction:column; gap:1rem; }
+  .era-card{ background:var(--ink-2); border-radius:var(--radius); padding:1rem 1.1rem; border-left:3px solid var(--america-gold); }
+  #eras-chivas .era-card{ border-left-color:var(--chivas-red); }
+  .era-years{ font-family:'Space Mono',monospace; font-size:.72rem; color:var(--paper-dim); }
+  .era-title{ font-size:1.02rem; margin:.15rem 0 .3rem; }
+  .era-note{ font-size:.8rem; color:var(--paper-dim); margin-bottom:.55rem; }
+  .era-players{ display:flex; flex-wrap:wrap; gap:.4rem; }
+  .era-player{ font-size:.78rem; background:var(--ink-3); border:1px solid var(--line); border-radius:999px; padding:.3rem .65rem; color:var(--paper); }
+  .era-player small{ color:var(--paper-dim); margin-left:.35rem; font-family:'Space Mono',monospace; text-transform:uppercase; font-size:.62rem; letter-spacing:.04em; }
+  .team-photo-block{ margin-top:var(--space-5); }
+  .team-photo-title{ font-size:1rem; margin-bottom:.3rem; }
+  .team-photo-reel{ display:flex; gap:1rem; overflow-x:auto; padding-bottom:.6rem; scroll-snap-type:x proximity; margin-top:.9rem; }
+  .team-photo-card{ scroll-snap-align:start; flex:0 0 auto; width:240px; }
+  .team-photo-card img{ width:100%; height:150px; object-fit:cover; border-radius:8px; border:1px solid var(--line); display:block; }
+  .team-photo-cap{ font-family:'Space Mono',monospace; font-size:.72rem; color:var(--paper-dim); margin-top:.45rem; }
+  .team-photo-cap b{ color:var(--paper); display:block; font-size:.82rem; margin-bottom:.1rem; }
+
+  /* ---------- 10. Cruzados ---------- */
+  /* Jugadores que jugaron para ambos clubes: cada tarjeta tiene un círculo de foto que voltea
+     (mismo truco 3D que las legend cards, pero circular) para mostrar al jugador con la playera
+     de salida y, al tocar, con la de llegada. */
+  .cross-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1rem; }
+  .cross-card{ background:var(--ink-2); border-radius:var(--radius); padding:1rem; border-top:3px solid var(--paper-dim); }
+  .cross-photo-flip{ display:block; background:none; border:0; padding:0; cursor:pointer; perspective:800px; width:88px; height:88px; margin-bottom:.5rem; }
+  .cross-photo-inner{ display:block; position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.2,.7,.3,1); transform-style:preserve-3d; }
+  .cross-photo-flip.flipped .cross-photo-inner{ transform:rotateY(180deg); }
+  .cross-photo-face{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center; border-radius:50%; backface-visibility:hidden; border:3px solid var(--line); box-shadow:0 2px 8px rgba(0,0,0,.35); }
+  .cross-photo-back{ transform:rotateY(180deg); }
+  .cross-photo-face.cross-photo-ame{ border-color:var(--america-gold); } /* borde dorado cuando la foto mostrada es con la playera de América */
+  .cross-photo-face.cross-photo-chi{ border-color:var(--chivas-red); }   /* borde rojo cuando es con la de Chivas */
+  .cross-photo-hint{ display:flex; align-items:center; gap:.3rem; font-size:.7rem; color:var(--paper-dim); font-style:italic; margin-bottom:.6rem; }
+  .cross-photo-hint svg{ width:11px; height:11px; opacity:.7; flex:0 0 auto; }
+  .cross-chip{ display:inline-flex; align-items:center; gap:.4rem; font-family:'Space Mono',monospace; font-size:.72rem; padding:.2rem .55rem; border-radius:999px; background:var(--ink-3); margin-bottom:.55rem; } /* etiqueta "América → Chivas · 2019" */
+  .cross-chip .from-a{ color:var(--america-gold); }
+  .cross-chip .from-c{ color:var(--chivas-red); }
+  .cross-card h3{ font-size:1rem; margin-bottom:.3rem; }
+  .cross-card p{ font-size:.85rem; color:var(--paper-dim); }
+  .pill-cloud{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:var(--space-3); }
+  .pill{ font-size:.78rem; padding:.3rem .7rem; border-radius:999px; border:1px solid var(--line); color:var(--paper-dim); }
+
+  /* ---------- 11. Reel de jugadas históricas ---------- */
+  /* Carrete horizontal con scroll-snap: cada tarjeta es un partido/jugada memorable, con foto
+     recortada a sangre (ancho de la tarjeta + márgenes negativos) en la parte superior. */
+  .reel{ display:flex; gap:1rem; overflow-x:auto; padding-bottom:1rem; scroll-snap-type:x proximity; margin:0 -0.2rem; padding-inline:.2rem; }
+  .play-card{ scroll-snap-align:start; flex:0 0 auto; width:260px; background:var(--ink-2); border-radius:var(--radius); padding:1.1rem; display:flex; flex-direction:column; gap:.5rem; border-top:3px solid var(--america-gold); overflow:hidden; }
+  .play-card.chi{ border-top-color:var(--chivas-red); }
+  .play-photo{ display:block; width:calc(100% + 2.2rem); margin:-1.1rem -1.1rem .2rem; object-fit:cover; object-position:center 20%; height:150px; } /* la foto "sangra" fuera del padding de la tarjeta para pegar con el borde superior */
+  .play-score{ font-family:'Space Mono',monospace; font-size:var(--fs-score); font-weight:700; }
+  .play-date{ font-family:'Space Mono',monospace; font-size:.72rem; color:var(--paper-dim); }
+  .play-title{ font-size:.95rem; font-weight:700; }
+  .play-body{ font-size:.83rem; color:var(--paper-dim); }
+
+  /* ---------- 12. Lineup builder ("Arma tu Once Ideal") ---------- */
+  /* Selector de club (toggle), cancha 3D con las 11 posiciones y la bolsa ("pool") de leyendas
+     disponibles para arrastrar/tocar hacia cada puesto. Todo el layout de la cancha (círculos,
+     nombres) se calcula en JS (ver drawPitchMarkings en script.js); aquí solo van los estilos. */
+  .lineup-toggle{ display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:3px; margin-bottom:var(--space-2); }
+  .lineup-toggle button{ display:inline-flex; align-items:center; gap:.5rem; border:0; background:none; color:var(--paper-dim); padding:.4rem 1.2rem .4rem .7rem; border-radius:999px; cursor:pointer; font-size:.85rem; font-weight:600; }
+  .toggle-crest{ width:22px; height:22px; object-fit:contain; }
+  .lineup-toggle button.active[data-club="america"]{ background:var(--america-blue); color:var(--america-gold); }
+  .lineup-toggle button.active[data-club="chivas"]{ background:var(--chivas-red-2); color:var(--chivas-white); }
+  .lineup-note{ color:var(--paper-dim); font-size:.85rem; margin-bottom:var(--space-3); max-width:60ch; }
+
+  /* Truco de perspectiva: .pitch-wrap define el punto de fuga (perspective) y .pitch se inclina
+     con rotateX(28deg) para simular que se ve la cancha "desde la grada". Cada .slot-content
+     lleva la rotación inversa (rotateX(-28deg), ver más abajo) para que fotos y nombres se lean
+     derechos aunque la cancha esté inclinada. */
+  .pitch-wrap{ perspective:1400px; margin-bottom:var(--space-3); }
+  .pitch{
+    position:relative;
+    transform:rotateX(28deg); transform-origin:center bottom;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0 40px, rgba(0,0,0,0.05) 40px 80px), /* franjas claro/oscuro como el pasto cortado */
+      linear-gradient(180deg, #1c3a28, var(--turf));
+    border:2px solid rgba(244,239,228,0.18);
+    border-radius:14px;
+    /* El padding horizontal es fluido (clamp) para dejar más aire a los 4 defensas en pantallas
+       angostas — ver también el ancho fluido de .slot más abajo, ambos resuelven el mismo problema. */
+    padding:2.2rem clamp(.3rem,2vw,1.2rem) 1.4rem;
+    display:flex; flex-direction:column; gap:1.5rem;
+  }
+  /* Líneas de la cancha (línea de medio campo, círculo central, áreas grande/chica, arcos de
+     esquina). Es un <svg> que el JS inserta y recalcula dinámicamente según el tamaño real de
+     la cancha (drawPitchMarkings en script.js) — aquí solo se define que quede detrás de todo
+     y no capture clics (pointer-events:none). */
+  .pitch-markings{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  .pitch-group{ position:relative; display:flex; flex-direction:column; align-items:center; gap:.4rem; } /* una fila de posiciones (ej. "Defensas") + su etiqueta */
+  .pitch-row-label{ font-family:'Space Mono',monospace; font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:rgba(244,239,228,.55); }
+  .pitch-row{ display:flex; justify-content:center; gap:clamp(.2rem,1.6vw,1rem); flex-wrap:wrap; } /* flex-wrap es el respaldo por si, aun con los tamaños fluidos, no cupieran todos los círculos */
+  .slot{
+    position:relative;
+    /* Ancho fluido: en pantallas angostas se encoge hasta 46px para que los 4 defensas siempre
+       quepan en una sola fila (evita que se "rompan" en 3+1, ver también .slot-badge). */
+    width:clamp(46px,16vw,92px); min-height:88px; border-radius:0; border:0;
+    background:none; color:var(--paper);
+    display:flex; align-items:flex-start; justify-content:center; text-align:center;
+    font-size:.68rem; line-height:1.15; padding:.3rem; cursor:pointer;
+  }
+  .slot-content{ display:flex; flex-direction:column; align-items:center; gap:.35rem; transform:rotateX(-28deg); } /* contrarresta la inclinación de .pitch para que el contenido se vea recto */
+  .slot-badge{
+    display:flex; align-items:center; justify-content:center;
+    /* Círculo del jugador, también con tamaño fluido acorde a .slot */
+    width:clamp(34px,12vw,64px); height:clamp(34px,12vw,64px); border-radius:50%;
+    border:1.5px dashed rgba(244,239,228,0.4); background:rgba(11,13,18,0.35); /* borde punteado = puesto vacío */
+  }
+  .slot.filled .slot-badge{ border-style:solid; border-width:2px; background:var(--america-blue); border-color:var(--america-gold); } /* borde sólido dorado = puesto ocupado (América) */
+  [data-active-club="chivas"] .slot.filled .slot-badge{ background:var(--chivas-red-2); border-color:var(--chivas-white); } /* mismo puesto ocupado pero con colores de Chivas */
+  .slot.filled .slot-name{ font-weight:700; }
+  .slot-photo{ display:block; width:100%; height:100%; border-radius:50%; object-fit:cover; object-position:top center; }
+  .slot-name{ display:block; }
+  .pool{ display:flex; flex-wrap:wrap; align-items:flex-start; gap:.5rem; } /* la "banca": todas las leyendas disponibles, agrupadas por posición */
+  .pool-group-label{ flex:1 0 100%; font-family:'Space Mono',monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--paper-dim); margin:.5rem 0 .1rem; }
+  .pool-group-label:first-child{ margin-top:0; }
+  .chip{
+    position:relative;
+    display:inline-flex; align-items:center; gap:.4rem;
+    border:1px solid var(--line); background:var(--ink-2); color:var(--paper);
+    border-radius:999px; padding:.35rem .9rem .35rem .35rem; font-size:.82rem; cursor:pointer;
+  }
+  .chip-photo{ display:block; width:26px; height:26px; border-radius:50%; object-fit:cover; object-position:top center; border:1.5px solid var(--america-gold); flex:0 0 auto; }
+  [data-active-club="chivas"] .chip-photo{ border-color:var(--chivas-red); }
+  .chip.selected{ background:var(--america-gold); color:var(--ink); border-color:var(--america-gold); } /* chip elegido en espera de tocar un puesto en la cancha */
+  [data-active-club="chivas"] .chip.selected{ background:var(--chivas-red); color:var(--paper); border-color:var(--chivas-red); }
+  .chip.used{ opacity:.35; text-decoration:line-through; cursor:default; } /* leyenda ya colocada en la cancha: se tacha y se desactiva */
+  .chip[data-tip]:not(.used):hover::after{
+    /* Tooltip hecho solo con CSS: el texto sale del atributo data-tip (stats + bio) vía content:attr() */
+    content:attr(data-tip);
+    position:absolute; bottom:calc(100% + 9px); left:50%; transform:translateX(-50%);
+    width:230px; max-width:62vw;
+    background:var(--ink); color:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:.6rem .75rem; font-size:.74rem; line-height:1.4; font-family:'Karla',sans-serif;
+    text-transform:none; letter-spacing:normal; font-weight:400;
+    white-space:normal; text-align:left;
+    box-shadow:0 10px 28px rgba(0,0,0,.55); z-index:60; pointer-events:none;
+  }
+  .lineup-actions{ margin-top:var(--space-3); display:flex; gap:.75rem; align-items:center; flex-wrap:wrap; }
+
+  /* Botón genérico reutilizado en todo el sitio (limpiar cancha, escuchar de nuevo, etc.) */
+  .btn{ font-family:'Space Mono',monospace; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; padding:.6rem 1.1rem; border-radius:6px; border:1px solid var(--line); background:transparent; color:var(--paper); cursor:pointer; }
+  .btn:hover{ border-color:var(--america-gold); color:var(--america-gold); }
+  .btn.primary{ background:var(--america-gold); color:var(--ink); border-color:var(--america-gold); font-weight:700; }
+  .btn.primary:hover{ color:var(--ink); filter:brightness(1.08); }
+
+  /* ---------- 13. Cultura ---------- */
+  /* Tarjetas sueltas con apodos, mascotas y anécdotas de cada club; algunas llevan un escudo
+     grande y translúcido de fondo (.culture-crest) o una franja de fotos de mascotas (.mascot-strip). */
+  .culture-grid{ display:grid; grid-template-columns:1fr; gap:1.1rem; }
+  @media (min-width:700px){ .culture-grid{ grid-template-columns:1fr 1fr; } }
+  .culture-card{ position:relative; background:var(--ink-2); border-radius:var(--radius); padding:1.2rem; border-top:3px solid var(--paper-dim); overflow:hidden; }
+  .culture-card h3{ font-size:1rem; margin-bottom:.4rem; display:flex; align-items:center; gap:.5rem; }
+  .culture-crest{ position:absolute; right:-18px; bottom:-18px; width:96px; height:96px; object-fit:contain; opacity:.12; } /* escudo decorativo de marca de agua, recortado en la esquina */
+  .culture-card p{ font-size:.88rem; color:var(--paper-dim); }
+  .culture-card.quote{ border-top-color:var(--america-gold); font-family:'Anton',sans-serif; text-transform:none; letter-spacing:0; font-size:1.15rem; line-height:1.35; color:var(--paper); display:flex; flex-direction:column; justify-content:center; gap:.2rem; } /* variante para la tarjeta de la frase célebre */
+  .culture-card.quote small{ display:block; font-family:'Space Mono',monospace; font-size:.68rem; color:var(--paper-dim); margin-top:.6rem; text-transform:uppercase; letter-spacing:.08em; }
+  .mascot-strip{ position:relative; z-index:1; display:flex; gap:.6rem; margin-top:.8rem; flex-wrap:wrap; }
+  .mascot-item{ width:84px; }
+  .mascot-item img{ display:block; width:84px; height:104px; object-fit:cover; object-position:top center; border-radius:8px; border:1.5px solid var(--line); }
+  .mascot-item span{ display:block; margin-top:.3rem; font-size:.62rem; line-height:1.2; color:var(--paper-dim); }
+
+  /* ---------- 14. Himnos ---------- */
+  .anthem-card{ background:var(--ink-2); border-radius:var(--radius); padding:1.3rem; border-top:3px solid var(--america-gold); display:flex; flex-direction:column; gap:.6rem; }
+  .anthem-card[data-club="chivas"]{ border-top-color:var(--chivas-red); }
+  .anthem-list{ display:flex; flex-direction:column; gap:.6rem; margin:.2rem 0; }
+  .anthem-list .row{ font-size:.85rem; color:var(--paper-dim); }
+  .anthem-list .row b{ color:var(--paper); }
+  .anthem-quote{ font-style:italic; color:var(--paper); }
+  .anthem-link{ align-self:flex-start; margin-top:.3rem; font-size:.78rem; color:var(--america-gold); text-decoration:none; border-bottom:1px solid transparent; }
+  .anthem-card[data-club="chivas"] .anthem-link{ color:var(--chivas-red); }
+  .anthem-link:hover{ border-bottom-color:currentColor; }
+
+  /* ---------- 15. Predicción ---------- */
+  /* Tres botones (América / Empate / Chivas); al elegir uno se resalta con los colores del club
+     elegido y aparece un mensaje correspondiente (definido en script.js). */
+  .predict-box{ display:flex; flex-wrap:wrap; gap:.8rem; }
+  .predict-opt{ flex:1 1 160px; padding:1rem; border-radius:var(--radius); border:1px solid var(--line); background:var(--ink-2); color:var(--paper); font-size:.95rem; font-weight:700; cursor:pointer; }
+  .predict-opt:hover{ border-color:var(--paper-dim); }
+  .predict-opt[data-pick="america"].picked{ background:var(--america-blue); border-color:var(--america-gold); color:var(--paper); }
+  .predict-opt[data-pick="chivas"].picked{ background:var(--chivas-red-2); border-color:var(--chivas-white); color:var(--paper); }
+  .predict-opt[data-pick="empate"].picked{ background:var(--ink-3); border-color:var(--paper); }
+  .predict-result{ margin-top:1rem; font-size:.95rem; min-height:1.4em; }
+
+  /* ---------- 16. Quiz ---------- */
+  /* Una pregunta a la vez, con las opciones en botones apilados; al responder se marcan en verde
+     (correcta) o naranja (la elegida, si estaba mal) y aparece el botón "Siguiente"/"Ver resultado". */
+  .quiz-box{ background:var(--ink-2); border-radius:var(--radius); padding:clamp(1.2rem,3vw,2rem); max-width:640px; }
+  .quiz-progress{ font-family:'Space Mono',monospace; font-size:.78rem; color:var(--paper-dim); margin-bottom:.6rem; display:flex; justify-content:space-between; }
+  .quiz-q{ font-size:1.15rem; font-weight:700; margin-bottom:1rem; text-wrap:balance; }
+  .quiz-opts{ display:flex; flex-direction:column; gap:.6rem; }
+  .quiz-opt{ text-align:left; background:var(--ink-3); border:1px solid var(--line); color:var(--paper); padding:.75rem .9rem; border-radius:8px; cursor:pointer; font-size:.92rem; }
+  .quiz-opt:hover:not(:disabled){ border-color:var(--america-gold); }
+  .quiz-opt.correct{ border-color:var(--ok); background:rgba(63,174,122,.15); }
+  .quiz-opt.wrong{ border-color:var(--bad); background:rgba(224,138,43,.15); }
+  .quiz-opt:disabled{ cursor:default; } /* tras responder, todas las opciones se deshabilitan para no volver a elegir */
+  .quiz-next{ margin-top:1.1rem; display:flex; justify-content:flex-end; }
+  .quiz-result{ text-align:center; display:flex; flex-direction:column; align-items:center; gap:.7rem; } /* pantalla final con el puntaje y botones de compartir/reintentar */
+  .quiz-result .score{ font-family:'Space Mono',monospace; font-size:3rem; font-weight:700; color:var(--america-gold); }
+  .quiz-result .verdict{ font-family:'Anton',sans-serif; font-size:1.4rem; }
+  .quiz-toast{ font-size:.78rem; color:var(--ok); min-height:1.2em; } /* mensajes cortos de confirmación (ej. "Copiado ✓"), también reutilizado por el lineup builder */
+
+  /* ---------- 17. Footer ---------- */
+  footer{ padding-block:var(--space-5); border-top:1px solid var(--line); }
+  footer .wrap{ display:flex; flex-direction:column; gap:1rem; }
+  footer p{ color:var(--paper-dim); font-size:.82rem; }
+  .sources{ display:flex; flex-wrap:wrap; gap:.4rem .9rem; font-size:.74rem; } /* lista de enlaces a las fuentes, generada por JS a partir del arreglo "sources" */
+  .sources a{ color:var(--paper-dim); text-decoration:underline; text-underline-offset:2px; }
+  .sources a:hover{ color:var(--america-gold); }
